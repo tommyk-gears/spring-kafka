@@ -638,6 +638,7 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 			builder.setHeader(this.correlationHeaderName, correlationId);
 		}
 		setPartition(builder, source);
+		setKey(builder, source);
 		this.replyTemplate.send(builder.build());
 	}
 
@@ -662,7 +663,6 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 
 	protected void asyncFailure(Object request, @Nullable Acknowledgment acknowledgment, Consumer<?, ?> consumer,
 			Throwable t, Message<?> source) {
-
 		try {
 			handleException(request, acknowledgment, consumer, source,
 					new ListenerExecutionFailedException(createMessagingErrorMessage(
@@ -676,7 +676,6 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 
 	protected void handleException(Object records, @Nullable Acknowledgment acknowledgment, Consumer<?, ?> consumer,
 			Message<?> message, ListenerExecutionFailedException e) {
-
 		if (this.errorHandler != null) {
 			try {
 				if (NULL_MESSAGE.equals(message)) {
@@ -716,6 +715,14 @@ public abstract class MessagingMessageListenerAdapter<K, V> implements ConsumerS
 		byte[] partitionBytes = getReplyPartition(source);
 		if (partitionBytes != null) {
 			builder.setHeader(KafkaHeaders.PARTITION, ByteBuffer.wrap(partitionBytes).getInt());
+		}
+	}
+
+	private void setKey(MessageBuilder<?> builder, Message<?> source) {
+		Object key = source.getHeaders().get(KafkaHeaders.RECEIVED_KEY);
+		// Set the reply record key only for non-batch requests
+		if (key != null && !(key instanceof List)) {
+			builder.setHeader(KafkaHeaders.KEY, key);
 		}
 	}
 
