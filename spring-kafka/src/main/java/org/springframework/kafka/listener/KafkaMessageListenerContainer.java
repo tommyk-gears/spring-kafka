@@ -3004,6 +3004,15 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 			}
 		}
 
+		private boolean checkPartitionAssignedBeforeSeek(@Nullable Collection<TopicPartition> assigned, TopicPartition topicPartition) {
+			if (assigned != null && assigned.contains(topicPartition)) {
+				return true;
+			}
+			this.logger.warn("No current assignment for partition '" + topicPartition +
+					"' due to partition reassignment prior to seeking.");
+			return false;
+		}
+
 		private void processSeeks() {
 			Collection<TopicPartition> assigned = getAssignedPartitions();
 			processTimestampSeeks(assigned);
@@ -3012,9 +3021,7 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 				traceSeek(offset);
 				try {
 					TopicPartition topicPartition = offset.getTopicPartition();
-					if (assigned == null || !assigned.contains(topicPartition)) {
-						this.logger.warn("No current assignment for partition " + topicPartition +
-								" due to partition reassignment prior to seeking.");
+					if (!checkPartitionAssignedBeforeSeek(assigned, topicPartition)) {
 						offset = this.seeks.poll();
 						continue;
 					}
@@ -3068,9 +3075,7 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 			Map<TopicPartition, Long> timestampSeeks = null;
 			while (seekIterator.hasNext()) {
 				TopicPartitionOffset tpo = seekIterator.next();
-				if (assigned == null || !assigned.contains(tpo.getTopicPartition())) {
-					this.logger.warn("No current assignment for partition " + tpo.getTopicPartition() +
-							" due to partition reassignment prior to seeking.");
+				if (!checkPartitionAssignedBeforeSeek(assigned, tpo.getTopicPartition())) {
 					seekIterator.remove();
 					continue;
 				}
