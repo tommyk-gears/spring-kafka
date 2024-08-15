@@ -31,6 +31,7 @@ import org.springframework.lang.Nullable;
  * @author Tomaz Fernandes
  * @author Gary Russell
  * @author Adrian Chlebosz
+ * @author Sanghyeok An
  * @since 2.7
  *
  */
@@ -46,8 +47,7 @@ public class DestinationTopic {
 	}
 
 	public DestinationTopic(String destinationName, DestinationTopic sourceDestinationtopic, String suffix, Type type) {
-		this.destinationName = destinationName;
-		this.properties = new Properties(sourceDestinationtopic.properties, suffix, type);
+		this(destinationName, new Properties(sourceDestinationtopic.properties, suffix, type));
 	}
 
 	public Long getDestinationDelay() {

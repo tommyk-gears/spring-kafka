@@ -54,6 +54,7 @@ import org.springframework.util.Assert;
  * @author Artem Bilan
  * @author Venil Noronha
  * @author Wang ZhiYang
+ * @author Sanghyeok An
  * @since 1.1
  */
 public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessageListenerAdapter<K, V>
@@ -94,6 +95,9 @@ public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessage
 		RecordMessageConverter recordMessageConverter = messageConverter.getRecordMessageConverter();
 		if (recordMessageConverter != null) {
 			setMessageConverter(recordMessageConverter);
+		}
+		else {
+			logger.warn("No batch message converter is set. because record message converter is null.");
 		}
 	}
 

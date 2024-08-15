@@ -37,6 +37,7 @@ import org.springframework.kafka.event.ListenerContainerIdleEvent;
  * idle.
  *
  * @author Gary Russell
+ * @author Sanghyeok An
  * @since 2.7.3
  *
  */
@@ -186,7 +187,7 @@ public class ContainerGroupSequencer implements ApplicationContextAware,
 		for (String group : this.groupNames) {
 			this.groups.add(this.applicationContext.getBean(group + ".group", ContainerGroup.class));
 		}
-		if (this.groups.size() > 0) {
+		if (!this.groups.isEmpty()) {
 			this.iterator = this.groups.iterator();
 			this.currentGroup = this.iterator.next();
 			this.groups.forEach(grp -> {

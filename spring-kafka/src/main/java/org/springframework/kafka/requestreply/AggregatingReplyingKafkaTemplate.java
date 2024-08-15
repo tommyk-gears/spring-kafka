@@ -50,6 +50,7 @@ import org.springframework.util.Assert;
  * @param <R> the reply data type.
  *
  * @author Gary Russell
+ * @author Sanghyeok An
  * @since 2.3
  *
  */
@@ -162,7 +163,7 @@ public class AggregatingReplyingKafkaTemplate<K, V, R>
 				}
 			}
 		});
-		if (completed.size() > 0) {
+		if (!completed.isEmpty()) {
 			super.onMessage(completed);
 		}
 	}

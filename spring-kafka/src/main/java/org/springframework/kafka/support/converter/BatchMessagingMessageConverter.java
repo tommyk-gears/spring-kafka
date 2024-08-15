@@ -60,12 +60,14 @@ import org.springframework.messaging.support.MessageBuilder;
  * @author Gary Russell
  * @author Dariusz Szablinski
  * @author Biju Kunjummen
+ * @author Sanghyeok An
  * @since 1.1
  */
 public class BatchMessagingMessageConverter implements BatchMessageConverter {
 
 	protected final LogAccessor logger = new LogAccessor(LogFactory.getLog(getClass())); // NOSONAR
 
+	@Nullable
 	private final RecordMessageConverter recordConverter;
 
 	private boolean generateMessageId = false;
@@ -123,6 +125,7 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 		this.headerMapper = headerMapper;
 	}
 
+	@Nullable
 	@Override
 	public RecordMessageConverter getRecordMessageConverter() {
 		return this.recordConverter;

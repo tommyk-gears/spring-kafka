@@ -41,6 +41,7 @@ import org.springframework.util.ReflectionUtils;
  * Detect and register Avro types for Apache Kafka listeners.
  *
  * @author Gary Russell
+ * @author Sagnhyeok An
  * @since 3.0
  *
  */
@@ -80,7 +81,7 @@ public class KafkaAvroBeanRegistrationAotProcessor implements BeanRegistrationAo
 				}
 			}, method -> method.getName().equals("onMessage"));
 		}
-		if (avroTypes.size() > 0) {
+		if (!avroTypes.isEmpty()) {
 			return (generationContext, beanRegistrationCode) -> {
 				ReflectionHints reflectionHints = generationContext.getRuntimeHints().reflection();
 				avroTypes.forEach(type -> reflectionHints.registerType(type,

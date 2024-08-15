@@ -73,6 +73,7 @@ import org.springframework.util.StringUtils;
  * @author Chris Gilbert
  * @author Adrian Gygax
  * @author Yaniv Nahoum
+ * @author Sanghyeok An
  */
 public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 		implements ConsumerFactory<K, V>, BeanNameAware, ApplicationContextAware {
@@ -398,7 +399,7 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 		boolean shouldModifyClientId = (this.configs.containsKey(ConsumerConfig.CLIENT_ID_CONFIG)
 				&& StringUtils.hasText(clientIdSuffix)) || overrideClientIdPrefix;
 		if (groupId == null
-				&& (properties == null || properties.stringPropertyNames().size() == 0)
+				&& (properties == null || properties.stringPropertyNames().isEmpty())
 				&& !shouldModifyClientId) {
 			return createKafkaConsumer(new HashMap<>(this.configs));
 		}

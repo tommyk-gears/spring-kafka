@@ -43,6 +43,7 @@ import org.springframework.util.PatternMatchUtils;
  *
  * @author Gary Russell
  * @author Artem Bilan
+ * @author Sanghyeok An
  *
  * @since 2.1.3
  *
@@ -216,7 +217,7 @@ public abstract class AbstractKafkaHeaderMapper implements KafkaHeaderMapper {
 		if (this.outbound) {
 			return true;
 		}
-		if (this.matchers.size() == 0) {
+		if (this.matchers.isEmpty()) {
 			return true;
 		}
 		return doesMatch(header);

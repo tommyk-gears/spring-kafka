@@ -30,6 +30,7 @@ import org.apache.kafka.common.config.TopicConfig;
  * {@link Optional#empty()} indicating the broker defaults will be applied.
  *
  * @author Gary Russell
+ * @author Sanghyeok An
  * @since 2.3
  *
  */
@@ -132,7 +133,7 @@ public final class TopicBuilder {
 		NewTopic topic = this.replicasAssignments == null
 				? new NewTopic(this.name, this.partitions, this.replicas)
 				: new NewTopic(this.name, this.replicasAssignments);
-		if (this.configs.size() > 0) {
+		if (!this.configs.isEmpty()) {
 			topic.configs(this.configs);
 		}
 		return topic;
