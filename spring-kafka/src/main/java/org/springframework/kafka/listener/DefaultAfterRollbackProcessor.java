@@ -171,10 +171,11 @@ public class DefaultAfterRollbackProcessor<K, V> extends FailedRecordProcessor
 				getFailureTracker(), container, this.logger)
 					&& isCommitRecovered() && this.kafkaTemplate.isTransactional()) {
 			ConsumerRecord<K, V> skipped = records.get(0);
+			TopicPartition topicPartition = new TopicPartition(skipped.topic(), skipped.partition());
+			OffsetAndMetadata offsetAndMetadata = createOffsetAndMetadata(container, skipped.offset() +1);
 			this.kafkaTemplate.sendOffsetsToTransaction(
-					Collections.singletonMap(new TopicPartition(skipped.topic(), skipped.partition()),
-							createOffsetAndMetadata(container, skipped.offset() + 1)
-					), consumer.groupMetadata());
+					Collections.singletonMap(topicPartition, offsetAndMetadata), consumer.groupMetadata());
+			consumer.seek(topicPartition, offsetAndMetadata);
 		}
 
 		if (!recoverable && this.backOff != null) {

@@ -39,6 +39,7 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerGroupMetadata;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -101,6 +102,7 @@ public class DefaultAfterRollbackProcessorTests {
 		inOrder.verify(consumer).seek(new TopicPartition("foo", 0), 0L); // recovery failed
 		inOrder.verify(consumer, times(2)).seek(new TopicPartition("foo", 1), 1L);
 		inOrder.verify(consumer).groupMetadata();
+		inOrder.verify(consumer).seek(new TopicPartition("foo", 0), new OffsetAndMetadata(1));
 		inOrder.verifyNoMoreInteractions();
 	}
 
