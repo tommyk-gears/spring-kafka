@@ -8,8 +8,7 @@ on:
       - main
       - '*.x'
 
-  schedule:
-    - cron: '0 5 * * *'
+
 
 concurrency:
   group: group-snapshot-for-${{ github.ref }}
